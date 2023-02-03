@@ -56,5 +56,7 @@ jobs:
         username: ${{ secrets.SSH_USER }}
         key: ${{ secrets.SSH_PRIVATE_KEY }}
         script: |
-          scp -o StrictHostKeyChecking=no -i ${{ secrets.SSH_PRIVATE_KEY }} target/*.jar $USER@$host:/opt/app/
+          cd /reimagined-octo-potato
+          git pull origin main
+          mvn package
           ssh -o StrictHostKeyChecking=no -i ${{ secrets.SSH_PRIVATE_KEY }} $USER@$host "sudo systemctl restart spring.service"
