@@ -41,6 +41,7 @@ jobs:
         JDBC_DATABASE_URL: jdbc:mysql://localhost:3306/test
         JDBC_USERNAME: root
         JDBC_PASSWORD: none
+      run: echo "Environment variables set"
 
     - name: Run tests
       run: |
