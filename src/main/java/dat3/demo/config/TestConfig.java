@@ -20,6 +20,7 @@ public class TestConfig implements CommandLineRunner {
         testRepository.save(new Test("Hello World"));
         testRepository.save(new Test("Hello World"));
         testRepository.save(new Test("Hello World"));
-        testRepository.save(new Test("Hello World"));        
+        testRepository.save(new Test("Hello World"));   
+        testRepository.save(new Test("Pushed with GitHub Workflows!"));
     }
 }
