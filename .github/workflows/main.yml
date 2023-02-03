@@ -1,0 +1,59 @@
+name: Build, Test and Deploy
+
+on:
+  push:
+    branches:
+      - main
+
+env:
+  SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Build with Maven
+      uses: actions/setup-java@v1
+      with:
+        java-version: 11
+
+    - name: Build project
+      run: |
+        mvn -B -DskipTests clean install
+
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Run tests
+      run: |
+        mvn test
+
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Copy SSH private key
+      run: |
+        echo "$SSH_PRIVATE_KEY" > deploy_key
+        chmod 600 deploy_key
+
+    - name: Deploy to DigitalOcean
+      uses: appleboy/ssh-action@master
+      with:
+        host: 104.248.141.135
+        username: root
+        password: ""
+        script: |
+          scp -o StrictHostKeyChecking=no -i deploy_key target/*.jar $USER@$host:/opt/app/
+          ssh -o StrictHostKeyChecking=no -i deploy_key $USER@$host "sudo systemctl restart spring.service"
