@@ -51,9 +51,9 @@ jobs:
 
     - name: Deploy to DigitalOcean
       uses: appleboy/ssh-action@master
-      with:
-        host: 104.248.141.135
-        username: root
+      with: 
+        host: ${{ secrets.SSH_HOST }}
+        username: ${{ secrets.SSH_USER }}
         key: ${{ secrets.SSH_PRIVATE_KEY }}
         script: |
           scp -o StrictHostKeyChecking=no -i ${{ secrets.SSH_PRIVATE_KEY }} target/*.jar $USER@$host:/opt/app/
