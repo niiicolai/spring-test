@@ -5,7 +5,6 @@ on:
     branches:
       - main
 env:
-  SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
   JDBC_DATABASE_URL: ${{ secrets.JDBC_DATABASE_URL }}
   JDBC_PASSWORD: ${{ secrets.JDBC_PASSWORD }}
   JDBC_USERNAME: ${{ secrets.JDBC_USERNAME }}
@@ -50,17 +49,12 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
 
-    - name: Copy SSH private key
-      run: |
-        echo "$SSH_PRIVATE_KEY" > deploy_key
-        chmod 600 deploy_key
-
     - name: Deploy to DigitalOcean
       uses: appleboy/ssh-action@master
       with:
         host: 104.248.141.135
         username: root
-        private-key: deploy_key
+        private-key: ${{ secrets.SSH_PRIVATE_KEY }}
         script: |
-          scp -o StrictHostKeyChecking=no -i deploy_key target/*.jar $USER@$host:/opt/app/
-          ssh -o StrictHostKeyChecking=no -i deploy_key $USER@$host "sudo systemctl restart spring.service"
+          scp -o StrictHostKeyChecking=no -i ${{ secrets.SSH_PRIVATE_KEY }} target/*.jar $USER@$host:/opt/app/
+          ssh -o StrictHostKeyChecking=no -i ${{ secrets.SSH_PRIVATE_KEY }} $USER@$host "sudo systemctl restart spring.service"
