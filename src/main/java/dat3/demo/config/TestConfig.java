@@ -18,9 +18,7 @@ public class TestConfig implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         testRepository.save(new Test("Hello World"));
-        testRepository.save(new Test("Hello World"));
-        testRepository.save(new Test("Hello World"));
-        testRepository.save(new Test("Hello World"));   
+        testRepository.save(new Test("Hello World")); 
         testRepository.save(new Test("Pushed with GitHub Workflows!"));
     }
 }
